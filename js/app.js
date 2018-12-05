@@ -1,6 +1,14 @@
 /*
  * Create a list that holds all of your cards
  */
+let cardList = document.getElementsByClassName("card");
+let openedCards = [];
+
+for (const card of cardList) {
+  card.addEventListener("click", function(evt) {
+    flipCard(evt.target);
+  });
+}
 
 /*
  * Display the cards on the page
@@ -36,9 +44,53 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-let cardList = document.getElementsByClassName("card");
-for (const card of cardList) {
-  card.addEventListener("click", function(evt) {
-    evt.target.classList.add("open", "show");
-  });
+
+function flipCard(card) {
+  //check if the card clicked is already part of a match
+  if (card.className.includes("match")) {
+    console.log("Already matched");
+    return;
+  }
+
+  //if no cards are open then add it the clicked card to the list
+  if (openedCards.length == 0) {
+    openedCards.push(card);
+    card.classList.add("open", "show");
+  } else if (openedCards.length == 1) {
+    //if one card is open then make sure the user hasn't clicked on the same card twice
+    if (openedCards[0] !== card) {
+      openedCards.push(card);
+      card.classList.add("open", "show");
+      checkForCardMatch();
+    }
+  }
+}
+
+function checkForCardMatch() {
+  const firstCard = openedCards[0];
+  const secondCard = openedCards[1];
+
+  console.log(firstCard.firstElementChild.className);
+  console.log(secondCard.firstElementChild.className);
+
+  // check if the icon className are equal, if they are then lock them
+  if (
+    firstCard.firstElementChild.className ==
+    secondCard.firstElementChild.className
+  ) {
+    for (const card of openedCards) {
+      card.classList.add("match");
+      card.classList.remove("open", "show");
+    }
+    openedCards = [];
+  } else {
+    console.log("No match");
+    setTimeout(function() {
+      for (const card of openedCards) {
+        card.classList.remove("open", "show");
+      }
+      openedCards = [];
+    }, 350);
+    return false;
+  }
 }
