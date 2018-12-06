@@ -1,16 +1,11 @@
 /*
  * Create a list that holds all of your cards
  */
+const deck = document.querySelector(".deck");
 let cardList = document.getElementsByClassName("card");
 let openedCards = [];
 let movesCnt = parseInt(document.querySelector(".moves").textContent);
 let matchedCardList = [];
-
-for (const card of cardList) {
-  card.addEventListener("click", function(evt) {
-    flipCard(evt.target);
-  });
-}
 
 //Add event listener for the the reset button
 document.querySelector(".restart").addEventListener("click", restartGame);
@@ -43,7 +38,7 @@ function restartGame() {
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-  var currentIndex = array.length,
+  let currentIndex = array.length,
     temporaryValue,
     randomIndex;
 
@@ -58,6 +53,19 @@ function shuffle(array) {
   return array;
 }
 
+function shuffleDeck() {
+  let cards = [...cardList];
+  const shuffledCards = shuffle(cards);
+  const deck = document.querySelector(".deck");
+
+  const fragment = document.createDocumentFragment();
+
+  for (const card of cards) {
+    fragment.appendChild(card);
+  }
+  deck.appendChild(fragment);
+}
+
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -68,6 +76,12 @@ function shuffle(array) {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
+
+deck.addEventListener("click", function(evt) {
+  if (evt.target.nodeName === "LI") {
+    flipCard(event.target);
+  }
+});
 
 function flipCard(card) {
   //check if the clicked card is already part of a match
