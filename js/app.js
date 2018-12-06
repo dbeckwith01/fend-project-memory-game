@@ -3,11 +3,35 @@
  */
 let cardList = document.getElementsByClassName("card");
 let openedCards = [];
+let movesCnt = parseInt(document.querySelector(".moves").textContent);
+let matchedCardList = [];
 
 for (const card of cardList) {
   card.addEventListener("click", function(evt) {
     flipCard(evt.target);
   });
+}
+
+//Add event listener for the the reset button
+document.querySelector(".restart").addEventListener("click", restartGame);
+
+function restartGame() {
+  //stop timer
+
+  //loop over the card list and remove match, show and open class names
+  for (const card of cardList) {
+    card.classList.remove("open", "show", "match");
+  }
+
+  //reset stars
+
+  //reset moves
+  movesCnt = 0;
+  document.querySelector(".moves").textContent = `${movesCnt}`;
+
+  //reset openedCard and matchedCardList
+  openedCards = [];
+  matchedCardList = [];
 }
 
 /*
@@ -46,7 +70,7 @@ function shuffle(array) {
  */
 
 function flipCard(card) {
-  //check if the card clicked is already part of a match
+  //check if the clicked card is already part of a match
   if (card.className.includes("match")) {
     console.log("Already matched");
     return;
@@ -61,17 +85,19 @@ function flipCard(card) {
     if (openedCards[0] !== card) {
       openedCards.push(card);
       card.classList.add("open", "show");
-      checkForCardMatch();
+      checkForCardMatchAndAct();
     }
   }
 }
 
-function checkForCardMatch() {
+function checkForCardMatchAndAct() {
   const firstCard = openedCards[0];
   const secondCard = openedCards[1];
 
-  console.log(firstCard.firstElementChild.className);
-  console.log(secondCard.firstElementChild.className);
+  // console.log(firstCard.firstElementChild.className);
+  // console.log(secondCard.firstElementChild.className);
+
+  incrementMoves();
 
   // check if the icon className are equal, if they are then lock them
   if (
@@ -81,9 +107,12 @@ function checkForCardMatch() {
     for (const card of openedCards) {
       card.classList.add("match");
       card.classList.remove("open", "show");
+      matchedCardList.push(card);
     }
+
     openedCards = [];
   } else {
+    //no match then see a timeout to return cards restore the cards to the hidden state
     console.log("No match");
     setTimeout(function() {
       for (const card of openedCards) {
@@ -93,4 +122,10 @@ function checkForCardMatch() {
     }, 350);
     return false;
   }
+}
+
+function incrementMoves() {
+  const movesElement = document.querySelector(".moves");
+  movesCnt++;
+  movesElement.textContent = `${movesCnt}`;
 }
