@@ -2,7 +2,8 @@
  * Create a list that holds all of your cards
  */
 const deck = document.querySelector(".deck");
-let cardList = document.getElementsByClassName("card");
+const cardList = document.getElementsByClassName("card");
+const TOTAL_NUMBER_OF_CARDS = cardList.length;
 let openedCards = [];
 let movesCnt = parseInt(document.querySelector(".moves").textContent);
 let matchedCardList = [];
@@ -27,6 +28,9 @@ function restartGame() {
   //reset openedCard and matchedCardList
   openedCards = [];
   matchedCardList = [];
+
+  //shuffle the deck
+  shuffleDeck();
 }
 
 /*
@@ -108,9 +112,6 @@ function checkForCardMatchAndAct() {
   const firstCard = openedCards[0];
   const secondCard = openedCards[1];
 
-  // console.log(firstCard.firstElementChild.className);
-  // console.log(secondCard.firstElementChild.className);
-
   incrementMoves();
 
   // check if the icon className are equal, if they are then lock them
@@ -118,23 +119,15 @@ function checkForCardMatchAndAct() {
     firstCard.firstElementChild.className ==
     secondCard.firstElementChild.className
   ) {
-    for (const card of openedCards) {
-      card.classList.add("match");
-      card.classList.remove("open", "show");
-      matchedCardList.push(card);
-    }
+    cardsMatch();
 
-    openedCards = [];
+    if (TOTAL_NUMBER_OF_CARDS == matchedCardList.length) {
+      //stop timer
+
+      console.log("WINNER!!");
+    }
   } else {
-    //no match then see a timeout to return cards restore the cards to the hidden state
-    console.log("No match");
-    setTimeout(function() {
-      for (const card of openedCards) {
-        card.classList.remove("open", "show");
-      }
-      openedCards = [];
-    }, 350);
-    return false;
+    cardsDontMatch();
   }
 }
 
@@ -142,4 +135,30 @@ function incrementMoves() {
   const movesElement = document.querySelector(".moves");
   movesCnt++;
   movesElement.textContent = `${movesCnt}`;
+}
+
+function cardsMatch() {
+  console.log("Match");
+  for (const card of openedCards) {
+    card.classList.add("match");
+    card.classList.remove("open", "show");
+    matchedCardList.push(card);
+  }
+  openedCards = [];
+}
+
+function cardsDontMatch() {
+  //no match then set a timeout to return cards restore the cards to the hidden state
+  console.log("No match");
+
+  for (const card of openedCards) {
+    card.classList.toggle("nomatch");
+  }
+
+  setTimeout(function() {
+    for (const card of openedCards) {
+      card.classList.remove("open", "show", "nomatch");
+    }
+    openedCards = [];
+  }, 1150);
 }
