@@ -4,15 +4,33 @@
 const deck = document.querySelector(".deck");
 const cardList = document.getElementsByClassName("card");
 const TOTAL_NUMBER_OF_CARDS = cardList.length;
+const starList = document.querySelectorAll(".stars li");
+const timer = document.querySelector(".timer");
+
+let gameTimerHandle = null;
 let openedCards = [];
-let movesCnt = parseInt(document.querySelector(".moves").textContent);
+let moveCounter = parseInt(document.querySelector(".moves").textContent);
 let matchedCardList = [];
+
+//on script run shuffle the deck
+shuffleDeck();
 
 //Add event listener for the the reset button
 document.querySelector(".restart").addEventListener("click", restartGame);
 
 function restartGame() {
   //stop timer
+  if (gameTimerHandle != null) {
+    clearInterval(gameTimerHandle);
+    gameTimerHandle = null;
+  }
+
+  hours = 0;
+  minutes = 0;
+  seconds = 0;
+
+  //reset timer text
+  timer.innerText = "00:00:00";
 
   //loop over the card list and remove match, show and open class names
   for (const card of cardList) {
@@ -20,10 +38,14 @@ function restartGame() {
   }
 
   //reset stars
+  for (const star of starList) {
+    star.firstElementChild.classList.remove("fa-star-o");
+    star.firstElementChild.classList.add("fa-star");
+  }
 
   //reset moves
-  movesCnt = 0;
-  document.querySelector(".moves").textContent = `${movesCnt}`;
+  moveCounter = 0;
+  document.querySelector(".moves").textContent = `${moveCounter}`;
 
   //reset openedCard and matchedCardList
   openedCards = [];
@@ -80,7 +102,6 @@ function shuffleDeck() {
  *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
-
 deck.addEventListener("click", function(evt) {
   if (evt.target.nodeName === "LI") {
     flipCard(event.target);
@@ -88,6 +109,11 @@ deck.addEventListener("click", function(evt) {
 });
 
 function flipCard(card) {
+  //if the game timer isn't running then start it
+  if (gameTimerHandle == null) {
+    startTimer();
+  }
+
   //check if the clicked card is already part of a match
   if (card.className.includes("match")) {
     console.log("Already matched");
@@ -122,9 +148,8 @@ function checkForCardMatchAndAct() {
     cardsMatch();
 
     if (TOTAL_NUMBER_OF_CARDS == matchedCardList.length) {
-      //stop timer
-
-      console.log("WINNER!!");
+      clearInterval(gameTimerHandle);
+      openModal();
     }
   } else {
     cardsDontMatch();
@@ -133,8 +158,34 @@ function checkForCardMatchAndAct() {
 
 function incrementMoves() {
   const movesElement = document.querySelector(".moves");
-  movesCnt++;
-  movesElement.textContent = `${movesCnt}`;
+  moveCounter++;
+  movesElement.textContent = `${moveCounter}`;
+
+  if (moveCounter > 8 && moveCounter <= 16) {
+    starList[2].firstElementChild.className = "fa fa-star-o";
+  } else if (moveCounter > 16) {
+    starList[1].firstElementChild.className = "fa fa-star-o";
+  }
+}
+
+let hours = 0;
+let minutes = 0;
+let seconds = 0;
+function startTimer() {
+  gameTimerHandle = setInterval(function() {
+    seconds++;
+    if (seconds == 60) {
+      minutes++;
+      seconds = 0;
+    }
+    if (minutes == 60) {
+      hour++;
+      minutes = 0;
+    }
+    timer.innerText = `${parseInt(hours / 10)}${hours % 10}:${parseInt(
+      minutes / 10
+    )}${minutes % 10}:${parseInt(seconds / 10)}${seconds % 10}`;
+  }, 1000);
 }
 
 function cardsMatch() {
@@ -160,5 +211,25 @@ function cardsDontMatch() {
       card.classList.remove("open", "show", "nomatch");
     }
     openedCards = [];
-  }, 1150);
+  }, 1050);
+}
+
+function openModal() {
+  const modal = document.getElementById("winningModal");
+  const remainStars = document.getElementsByClassName("fa-star");
+
+  modal.querySelector(
+    ".text"
+  ).firstElementChild.innerText = `With ${moveCounter} moves, ${
+    remainStars.length
+  } stars and in ${timer.innerText} time`;
+
+  modal.style.display = "block";
+}
+
+function closeModal() {
+  console.log("Got Here");
+  const modal = document.getElementById("winningModal");
+  modal.style.display = "none";
+  restartGame();
 }
