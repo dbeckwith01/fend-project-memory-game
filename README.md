@@ -1,20 +1,27 @@
 # Memory Game Project
 
+A game that will test your memory. The game has hidden cards that you must uncover by clicking them.
+
 ## Table of Contents
 
-* [Instructions](#instructions)
-* [Contributing](#contributing)
+- [Instructions](#instructions)
+- [Authors](#authors)
+- [Acknowledgements](#acknowledgements)
 
 ## Instructions
 
-The starter project has some HTML and CSS styling to display a static version of the Memory Game project. You'll need to convert this project from a static project to an interactive one. This will require modifying the HTML and CSS files, but primarily the JavaScript file.
+Start clicking any card to flip the card over. Click another card, if they match they will stay flipped over, if they don't then they will return to their original hidden state. Keep playing until you have matched all of the cards.
 
-To get started, open `js/app.js` and start building out the app's functionality
+To challenge your self, try to finish the game with the most amount of stars in the least amount of time.
 
-For specific, detailed instructions, look at the project instructions in the [Udacity Classroom](https://classroom.udacity.com/me).
+If you want to start over, click the reply button in the top right corner.
 
-## Contributing
+## Authors
 
-This repository is the starter code for _all_ Udacity students. Therefore, we most likely will not accept pull requests.
+Darren Beckwith
 
-For details, check out [CONTRIBUTING.md](CONTRIBUTING.md).
+##Acknowledgements
+
+This game was built from the [Udacity](https://www.udacity.com) FEND course [starter project](https://github.com/udacity/fend-project-memory-game).
+
+Used some CSS from Sandra Israel-Ovirih [here](https://scotch.io/tutorials/how-to-build-a-memory-matching-game-in-javascript).
