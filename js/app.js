@@ -116,7 +116,7 @@ function flipCard(card) {
 
   //check if the clicked card is already part of a match
   if (card.className.includes("match")) {
-    console.log("Already matched");
+    // console.log("Already matched");
     return;
   }
 
@@ -189,7 +189,7 @@ function startTimer() {
 }
 
 function cardsMatch() {
-  console.log("Match");
+  // console.log("Match");
   for (const card of openedCards) {
     card.classList.add("match");
     card.classList.remove("open", "show");
@@ -200,7 +200,7 @@ function cardsMatch() {
 
 function cardsDontMatch() {
   //no match then set a timeout to return cards restore the cards to the hidden state
-  console.log("No match");
+  // console.log("No match");
 
   for (const card of openedCards) {
     card.classList.toggle("nomatch");
@@ -228,7 +228,6 @@ function openModal() {
 }
 
 function closeModal() {
-  console.log("Got Here");
   const modal = document.getElementById("winningModal");
   modal.style.display = "none";
   restartGame();
